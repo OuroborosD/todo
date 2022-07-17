@@ -15,7 +15,7 @@ class _TodoListPageState extends State<TodoListPage> {
   final TextEditingController taferaController = TextEditingController();
 
   List <Todo> lista_tarefa = [];
-  
+  int? posicao;
 
   void getTarefa(){
     String tarefa = taferaController.text;
@@ -32,13 +32,58 @@ class _TodoListPageState extends State<TodoListPage> {
     print(lista_tarefa);
   }
 
-  bool get list_size => lista_tarefa.length >= 4; 
+  void deletar(Todo tarefa){
+    posicao =  lista_tarefa.indexOf(tarefa);
+      setState(() {
+        
+      lista_tarefa.remove(tarefa);// pega a a tarefa, e compata com a lista de objetos. para remover
+      });
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('${tarefa.tarefa} foi removido', style: TextStyle(color: Colors.black),),
+          backgroundColor: Colors.white,
+          action: SnackBarAction(
+            label:"Desfazer",
+            onPressed: (){
+              setState(() {
+                
+                lista_tarefa.insert(posicao!, tarefa);
+              });
+            },
+          ),)
+      );
+  }
+
+  void deletarTodos(){
+    showDialog(
+      context: context, 
+      builder: (context) => AlertDialog(
+        title: Text('Deseja realmente apagar todas as tarefas?'),
+        actions: [
+          TextButton(onPressed: (){
+            Navigator.of(context).pop();
+          },
+           child: Text('Não')),
+          TextButton(onPressed: (){
+               setState(() {
+                  lista_tarefa.clear();  
+                });
+                Navigator.of(context).pop();
+          },
+           child: Text('Sim')),
+        ],
+      ));
+   
+    
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Material(
-        child: Padding(
+      child: Scaffold(
+        body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
           child: Column(
             children: [
@@ -92,7 +137,7 @@ class _TodoListPageState extends State<TodoListPage> {
                     //     },
                     // ),
                     //   )
-                  Todo_ListView(tarefa)
+                  Todo_ListView(tarefa,deletar)
                   , 
                   ],
                 ),
@@ -108,7 +153,7 @@ class _TodoListPageState extends State<TodoListPage> {
                       ),),
                   ),
                   SizedBox(width: 8),
-                  ElevatedButton(onPressed: ()=>{}, child: Icon(Icons.restore_from_trash))
+                  ElevatedButton(onPressed: deletarTodos, child: Icon(Icons.delete))
                 ],
               ),
             ],
