@@ -37,6 +37,7 @@ class _TodoListPageState extends State<TodoListPage> {
      aux_db.saveTodo(novatarefa);
      aux_db.pegarTodosTodo().then((list){
         print("teste");
+        print(list[0]);
         print(list);
         
      });

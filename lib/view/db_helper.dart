@@ -23,7 +23,7 @@ class Db_view{
 
   Future<Database> initDb() async{// inicializa o banco de dados
     final databasePath = await  getDatabasesPath();// pega o caminho onde está feito
-    final path = join(databasePath,'todo1.db');
+    final path = join(databasePath,'todo2.db');
 
     return openDatabase(
       path, version:1,
@@ -39,10 +39,14 @@ class Db_view{
   }
 
   Future<Todo> saveTodo(Todo todo) async{
+    // print(todo);
+    // print('-----------------------------------------');
+    // print(todo.id);
     Database dbTodo = await db;
     todo.id = await dbTodo.insert(table, todo.toMap());
-    print(todo);
-    print(todo.id);
+    // print(todo);
+    // print('-----------------------------------------');
+    // print(todo.id);
     return todo;
     
   }

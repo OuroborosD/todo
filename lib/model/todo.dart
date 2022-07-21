@@ -7,13 +7,13 @@ class Todo{
   Todo.FromMap(Map map){// transformar o mapa em dados da classe
     id = map['id'];// vai transformar a string id no nome da columna
     tarefa = map['tarefa'];
-    data = map['data'];
+    data = DateTime.parse(map['data']);// tranforma a string em datetime
   }
   
   Map<String, dynamic> toMap(){// transforma o objeto em mapa
    Map<String, dynamic> map = {// não tem id, pois é o banco de dados que vai gerar
     'tarefa': tarefa, 
-    'data': data, 
+    'data': data.toString(), 
    };
    if( id != null){//
     map['id'] = id;
@@ -24,7 +24,7 @@ class Todo{
 
   @override
  String toString(){// override, para mostrar otodos os dados de forma fácil
-  return 'tarefa id: $id, tarefa: $tarefa, data: $data';
+  return 'id: $id, tarefa: $tarefa, data: $data';
  }
 
 }
