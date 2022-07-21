@@ -1,7 +1,9 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:todo/widgets/listview.dart';
 
+import '../view/db_helper.dart';
 import '../model/todo.dart';
 
 class TodoListPage extends StatefulWidget {
@@ -14,8 +16,12 @@ class TodoListPage extends StatefulWidget {
 class _TodoListPageState extends State<TodoListPage> {
   final TextEditingController taferaController = TextEditingController();
 
+
+
   List <Todo> lista_tarefa = [];
   int? posicao;
+
+  Db_view aux_db = Db_view();
 
   void getTarefa(){
     String tarefa = taferaController.text;
@@ -28,6 +34,12 @@ class _TodoListPageState extends State<TodoListPage> {
         lista_tarefa.add(novatarefa);
     });
      taferaController.clear();
+     aux_db.saveTodo(novatarefa);
+     aux_db.pegarTodosTodo().then((list){
+        print("teste");
+        print(list);
+        
+     });
     
     print(lista_tarefa);
   }
@@ -38,9 +50,11 @@ class _TodoListPageState extends State<TodoListPage> {
         
       lista_tarefa.remove(tarefa);// pega a a tarefa, e compata com a lista de objetos. para remover
       });
+    
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
+          duration: Duration(seconds: 6),
           content: Text('${tarefa.tarefa} foi removido', style: TextStyle(color: Colors.black),),
           backgroundColor: Colors.white,
           action: SnackBarAction(
@@ -137,6 +151,7 @@ class _TodoListPageState extends State<TodoListPage> {
                     //     },
                     // ),
                     //   )
+                  
                   Todo_ListView(tarefa,deletar)
                   , 
                   ],
