@@ -4,7 +4,7 @@ class Todo{
   String? tarefa;
   DateTime? data;
 
-  Todo.FromMap(Map map){// transformar o mapa em dados da classe
+  Todo.fromMap(Map map){// transformar o mapa em dados da classe
     id = map['id'];// vai transformar a string id no nome da columna
     tarefa = map['tarefa'];
     data = DateTime.parse(map['data']);// tranforma a string em datetime

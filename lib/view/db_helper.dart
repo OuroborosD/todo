@@ -5,6 +5,8 @@ import '../model/todo.dart';
 
 final String  table= 'todo_tarefas';
 
+
+
 class Db_view{
   static final Db_view _instance =  Db_view.internal();// não precisa entender
   factory Db_view() => _instance;// não precisa entender
@@ -39,14 +41,8 @@ class Db_view{
   }
 
   Future<Todo> saveTodo(Todo todo) async{
-    // print(todo);
-    // print('-----------------------------------------');
-    // print(todo.id);
     Database dbTodo = await db;
     todo.id = await dbTodo.insert(table, todo.toMap());
-    // print(todo);
-    // print('-----------------------------------------');
-    // print(todo.id);
     return todo;
     
   }
@@ -56,6 +52,7 @@ class Db_view{
   //   List<Map> maps = await dbTodo.query(table,
   //     columns: ['id','tarefa','data']);
   // }
+
 
   Future<int> deleteTodo(int id) async{// o delete retorna um numero inteiro
     Database dbTodo = await db;
@@ -72,9 +69,7 @@ class Db_view{
     List listMap = await dbTodo.rawQuery("SELECT * FROM $table;");// pega todas as tables
     List<Todo>  listTodo = [];
     for(Map m in listMap){
-      print('---------------dados d M $m');
-      listTodo.add(Todo.FromMap(m));
-      print(listTodo);
+      listTodo.add(Todo.fromMap(m));
     }
     return listTodo;
   }
