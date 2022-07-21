@@ -72,7 +72,9 @@ class Db_view{
     List listMap = await dbTodo.rawQuery("SELECT * FROM $table;");// pega todas as tables
     List<Todo>  listTodo = [];
     for(Map m in listMap){
+      print('---------------dados d M $m');
       listTodo.add(Todo.FromMap(m));
+      print(listTodo);
     }
     return listTodo;
   }
@@ -82,9 +84,16 @@ class Db_view{
     return Sqflite.firstIntValue(await dbTodo.rawQuery("SELECT COUNT(*) FROM $table"));
   }
 
+   Future<int> deleteAll() async{
+    Database dbTodo = await db;
+    return dbTodo.rawDelete('DELETE FROM $table');
+  }
+
   Future fechardb() async{
     Database dbTodo = await db;
     dbTodo.close();
   }
+
+ 
 
 }

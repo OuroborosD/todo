@@ -20,27 +20,30 @@ class _TodoListPageState extends State<TodoListPage> {
 
   List <Todo> lista_tarefa = [];
   int? posicao;
-
+  int? position= 0;
   Db_view aux_db = Db_view();
 
-  void getTarefa(){
+  void getTarefa() async {
     String tarefa = taferaController.text;
     print(tarefa);
     Todo novatarefa =  Todo(
         data: DateTime.now(),
         tarefa:tarefa);
-    setState(() {
-      
-        lista_tarefa.add(novatarefa);
+    
+    await aux_db.saveTodo(novatarefa);// pimeiro você salva no banco de dados
+    position =  await aux_db.getTamanho();// para poder verificar  tamanho do banco
+    setState(()  {
+        print('${position.runtimeType} , $position');
+        lista_tarefa.add(novatarefa);   
     });
      taferaController.clear();
-     aux_db.saveTodo(novatarefa);
-     aux_db.pegarTodosTodo().then((list){
+     await aux_db.pegarTodosTodo().then((list){
         print("teste");
         print(list[0]);
         print(list);
         
      });
+    
     
     print(lista_tarefa);
   }
@@ -80,9 +83,17 @@ class _TodoListPageState extends State<TodoListPage> {
             Navigator.of(context).pop();
           },
            child: Text('Não')),
-          TextButton(onPressed: (){
+          TextButton(onPressed: ()async{
+              await aux_db.deleteAll();
+              position = await aux_db.getTamanho();
                setState(() {
-                  lista_tarefa.clear();  
+                aux_db.deleteAll();// apaga todos os elementos da tabela;
+                lista_tarefa.clear();  
+                aux_db.pegarTodosTodo().then((list){
+                  print(' print deleteall $list');
+                
+                });
+                
                 });
                 Navigator.of(context).pop();
           },
@@ -162,7 +173,7 @@ class _TodoListPageState extends State<TodoListPage> {
               Row(
                 children: [
                   Expanded(
-                    child: Text('você possui ${lista_tarefa.length}  taferas pendentes', 
+                    child: Text('você possui $position  taferas pendentes', 
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w300,
